@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="SyncWave - Unleash Your Full Potential. Discover our creative and innovative services from cheat development to UI/UX design." />
+  <title>SyncWave - Unleash Your Full Potential</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* Variables */
+    :root {
+      --primary: #800080;
+      --secondary: #4b0082;
+      --accent: #1a1a1a;
+      --light: #fff;
+      --dark: #111;
+      --transition: all 0.3s ease;
+    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: var(--accent);
+      color: var(--light);
+      line-height: 1.6;
+    }
+    a { text-decoration: none; color: inherit; }
+    img { max-width: 100%; height: auto; display: block; }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-thumb {
+      background: var(--primary);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-track { background: var(--accent); }
+
+    /* Scroll Progress */
+    #scroll-progress {
+      position: fixed;
+      top: 0; left: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      width: 0;
+      z-index: 1500;
+      transition: width 0.1s ease-out;
+    }
+
+    /* Navbar */
+    .navbar {
+      position: fixed; top: 0; width: 100%;
+      padding: 20px 50px;
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(10px);
+      z-index: 1000;
+      display: flex; justify-content: space-between; align-items: center;
+      transition: background 0.3s;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    }
+    .navbar:hover { background: rgba(0,0,0,0.9); }
+    .logo {
+      font-size: 1.8rem; font-weight: 700;
+      background: linear-gradient(to right, var(--secondary), var(--primary));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      cursor: pointer;
+    }
+    .menu-toggle {
+      display: none; font-size: 1.5rem;
+      background: none; border: none; color: var(--light); cursor: pointer;
+    }
+    .navbar ul {
+      list-style: none; display: flex;
+    }
+    .navbar li {
+      margin-left: 30px; position: relative;
+    }
+    .navbar li a {
+      font-size: 1rem; color: var(--light);
+      transition: color 0.3s; padding-bottom: 5px;
+    }
+    .navbar li a::after {
+      content: ""; position: absolute; left: 0; bottom: 0;
+      width: 0; height: 2px; background: var(--primary);
+      transition: width 0.3s;
+    }
+    .navbar li a:hover::after { width: 100%; }
+    @media (max-width:768px) {
+      .menu-toggle { display: block; }
+      .navbar ul {
+        position: absolute; top: 100%; left: 0; width: 100%;
+        background: rgba(0,0,0,0.9); flex-direction: column;
+        max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out;
+      }
+      .navbar ul.open { max-height: 300px; }
+      .navbar li { margin: 15px 0; text-align: center; }
+      .navbar { padding: 15px 20px; }
+    }
+
+    /* Back to Top */
+    .back-to-top {
+      position: fixed; bottom: 30px; right: 30px;
+      background: var(--primary); color: var(--light);
+      padding: 10px 15px; border-radius: 50%;
+      display: none; cursor: pointer;
+      transition: opacity 0.3s, transform 0.3s;
+      z-index: 1000;
+    }
+    .back-to-top.show { display: block; opacity: 0.8; }
+    .back-to-top:hover { opacity: 1; transform: translateY(-3px); }
+
+    /* Hero */
+    header {
+      position: relative; height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      text-align: center; overflow: hidden;
+    }
+    header::before {
+      content: ""; position: absolute; top: -50%; left: -50%;
+      width: 200%; height: 200%;
+      background: radial-gradient(circle at center, var(--primary), var(--secondary));
+      animation: rotateBg 30s linear infinite; z-index: 0;
+    }
+    @keyframes rotateBg {
+      from { transform: rotate(0deg); } to { transform: rotate(360deg); }
+    }
+    header::after {
+      content: ""; position: absolute; top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.7); z-index: 1;
+    }
+    .hero-content {
+      position: relative; z-index: 2; padding: 20px;
+      animation: fadeInUp 1s ease-out forwards; opacity: 0;
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ↓ NEW: limit hero logo size ↓ */
+    .hero-logo {
+      background: rgba(0,0,0,0.8);
+      padding: 10px;
+      border-radius: 12px;
+      margin: 0 auto 20px;
+      box-shadow: 0 0 30px rgba(0,0,0,0.9);
+      max-width: 200px;          /* keep container from growing too big */
+      animation: pulseLogo 2s infinite alternate;
+    }
+    .hero-logo img {
+      width: 100%;               /* fills up that 200px max-width */
+      height: auto;
+      display: block;
+    }
+    @keyframes pulseLogo {
+      from { transform: scale(1); } to { transform: scale(1.05); }
+    }
+
+    header h1 {
+      font-size: 4rem; margin-bottom: 10px;
+      text-transform: uppercase; letter-spacing: 2px;
+      text-shadow: 0 0 20px var(--primary), 0 0 30px var(--secondary);
+    }
+    #typed {
+      font-size: 1.3rem; font-weight: 500;
+      margin-bottom: 30px; min-height: 30px;
+      display: inline-block; text-shadow: 1px 1px 5px rgba(0,0,0,0.7);
+    }
+    #typed::after {
+      content: '|'; animation: blink 1s steps(2, start) infinite;
+      margin-left: 5px;
+    }
+    @keyframes blink {
+      0%,100% { opacity: 1; } 50% { opacity: 0; }
+    }
+    header p {
+      font-size: 1.5rem; margin-bottom: 40px;
+      text-shadow: 1px 1px 5px rgba(0,0,0,0.8);
+    }
+    .cta-btn {
+      background: var(--primary); color: var(--light);
+      padding: 15px 40px; border-radius: 50px;
+      font-size: 1.2rem; font-weight: 700;
+      border: none; cursor: pointer;
+      transition: transform 0.3s, box-shadow 0.3s, border 0.3s;
+      box-shadow: 0 0 15px var(--primary);
+    }
+    .cta-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 35px var(--primary), 0 0 50px var(--secondary);
+      border: 2px solid var(--light);
+    }
+
+    /* Section Headings */
+    .section-heading {
+      font-size: 3rem; margin-bottom: 50px;
+      position: relative; display: inline-block;
+    }
+    .section-heading::after {
+      content: ""; display: block;
+      width: 100px; height: 4px;
+      background: var(--primary); margin: 20px auto 0;
+      border-radius: 2px;
+    }
+
+    /* Animate on Scroll */
+    .animate-on-scroll {
+      opacity: 0; transform: translateY(20px);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+    .animate-on-scroll.in-view {
+      opacity: 1; transform: translateY(0);
+    }
+
+    /* ——— Updated Services Styles ——— */
+    .services {
+      background: var(--dark);
+      padding: 80px 20px;
+      text-align: center;
+    }
+    .services .section-heading {
+      font-size: 2.8rem;
+      margin-bottom: 60px;
+      color: var(--light);
+    }
+    .services .section-heading::after {
+      width: 80px; height: 4px;
+      background: var(--primary);
+      margin-top: 16px;
+    }
+    .service-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 40px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .service-card {
+      background: rgba(255, 255, 255, 0.05);
+      border-left: 4px solid var(--primary);
+      border-radius: 12px;
+      padding: 30px 20px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      text-align: center;
+    }
+    .service-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+    }
+    .service-icon {
+      width: 64px; height: 64px;
+      margin: 0 auto 20px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--secondary), var(--primary));
+      display: flex; align-items: center; justify-content: center;
+      color: var(--light); font-size: 1.8rem;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    }
+    .service-card h3 {
+      font-size: 1.5rem; margin-bottom: 12px; color: var(--light);
+    }
+    .service-card p {
+      font-size: 0.95rem; color: #ccc; line-height: 1.5;
+    }
+
+    /* About */
+    .about {
+      background: var(--accent);
+      padding: 100px 50px;
+      text-align: center;
+      color: #ccc;
+    }
+    .about p {
+      max-width: 800px;
+      margin: 20px auto;
+      font-size: 1.2rem;
+    }
+    .why-us-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      text-align: center;
+    }
+    .why-us-container .subheading {
+      font-size: 1.2rem;
+      color: #aaa;
+      margin-bottom: 40px;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+    }
+    .feature-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 15px;
+      padding: 20px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+    .feature-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    }
+    .feature-card i {
+      font-size: 2.5rem;
+      color: var(--primary);
+      margin-bottom: 15px;
+    }
+    .feature-card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+      color: var(--primary);
+    }
+    .feature-card p {
+      font-size: 0.95rem;
+      color: #ccc;
+      line-height: 1.4;
+    }
+
+    /* Testimonials */
+    .testimonials {
+      background: var(--dark);
+      padding: 80px 50px;
+      text-align: center;
+    }
+    .testimonials .section-heading {
+      font-size: 2.8rem;
+      margin-bottom: 40px;
+    }
+    .testimonials .reviews-sorting {
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+    .testimonials .reviews-sorting select {
+      padding: 5px 10px;
+      border: 1px solid var(--primary);
+      background: var(--dark);
+      color: var(--light);
+      border-radius: 5px;
+    }
+    .testimonial-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 40px;
+      margin-top: 20px;
+    }
+    .testimonial-card {
+      background: rgba(255, 255, 255, 0.05);
+      border-left: 5px solid var(--primary);
+      border-radius: 10px;
+      padding: 20px 25px;
+      text-align: left;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .testimonial-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 25px rgba(0, 0, 0, 0.5);
+    }
+    .testimonial-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      font-size: 0.9rem
+    }
+    .review-stars i {
+      margin-right: 3px;
+      color: gold;
+    }
+    .testimonial-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+    .review-description {
+      font-size: 0.95rem;
+      color: #ccc;
+      line-height: 1.4;
+    }
+
+    /* CTA Section */
+    .cta-section {
+      background: linear-gradient(135deg, var(--secondary), var(--primary));
+      padding: 100px 50px;
+      text-align: center;
+    }
+    .cta-section h2 { font-size: 3rem; margin-bottom: 20px; }
+    .cta-section p { font-size: 1.2rem; margin-bottom: 40px; }
+
+    /* Footer */
+    footer {
+      background: var(--accent);
+      padding: 20px 50px;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+    footer a {
+      text-decoration: underline;
+      color: var(--primary);
+      transition: color 0.3s;
+    }
+    footer a:hover { color: var(--secondary); }
+    footer .social-icons {
+      margin-top: 10px;
+    }
+    footer .social-icons a {
+      margin: 0 10px;
+      font-size: 1.2rem;
+      transition: transform 0.3s;
+    }
+    footer .social-icons a:hover { transform: scale(1.2); }
+
+    /* Mobile Adjustments */
+    @media (max-width:480px) {
+      header h1 { font-size: 2.5rem; }
+      header p, #typed { font-size: 1rem; }
+      .cta-btn { font-size: 1rem; padding: 10px 25px; }
+      .section-heading { font-size: 2.5rem; }
+      .services, .about, .testimonials, .cta-section { padding: 50px 20px; }
+      .service-card { padding: 20px 15px; }
+      .service-icon { width: 56px; height: 56px; font-size: 1.6rem; }
+      .service-grid { gap: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div id="scroll-progress"></div>
+  <nav class="navbar" aria-label="Main Navigation">
+    <div class="logo">SyncWave</div>
+    <button class="menu-toggle" aria-label="Toggle Navigation" aria-expanded="false">
+      <i class="fas fa-bars"></i>
+    </button>
+    <ul id="nav-menu">
+      <li><a href="#services">Services</a></li>
+      <li><a href="#about">Why Us?</a></li>
+      <li><a href="#testimonials">Reviews</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <div class="back-to-top" id="backToTop" aria-label="Back to Top">
+    <i class="fas fa-arrow-up"></i>
+  </div>
+
+  <header>
+    <div class="hero-content">
+      <div class="hero-logo">
+        <!-- Ur Logo here bruh -->
+        <img src="your-logo.png" alt="SyncWave Logo" loading="lazy">
+      </div>
+      <h1>SyncWave</h1>
+      <div id="typed" aria-live="polite"></div>
+      <p>Unleash Your Full Potential</p>
+      <a href="#contact" class="cta-btn">Join Our Discord</a>
+    </div>
+  </header>
+
+  <!-- Our Services -->
+  <section id="services" class="services animate-on-scroll">
+    <h2 class="section-heading">Our Services</h2>
+    <div class="service-grid">
+      <div class="service-card animate-on-scroll">
+        <div class="service-icon"><i class="fas fa-bullseye"></i></div>
+        <h3>Cheat Development</h3>
+        <p>Custom Aimbot, ESP, Triggerbot &amp; more — engineered for rock‑solid stealth.</p>
+      </div>
+      <div class="service-card animate-on-scroll">
+        <div class="service-icon"><i class="fas fa-user-secret"></i></div>
+        <h3>Bypass Solutions</h3>
+        <p>Kernel‑level bypass for Vanguard, BattleEye, EAC &amp; other anti‑cheats.</p>
+      </div>
+      <div class="service-card animate-on-scroll">
+        <div class="service-icon"><i class="fas fa-memory"></i></div>
+        <h3>Spoofers</h3>
+        <p>Temp &amp; permanent HWID spoofers to keep you one step ahead.</p>
+      </div>
+      <div class="service-card animate-on-scroll">
+        <div class="service-icon"><i class="fas fa-robot"></i></div>
+        <h3>Discord Bots &amp; Software</h3>
+        <p>Full‑source custom bots, dashboards &amp; automation tools.</p>
+      </div>
+      <div class="service-card animate-on-scroll">
+        <div class="service-icon"><i class="fas fa-code"></i></div>
+        <h3>Web Development</h3>
+        <p>Lightning‑fast, secure sites &amp; dashboards built for scale.</p>
+      </div>
+      <div class="service-card animate-on-scroll">
+        <div class="service-icon"><i class="fas fa-paint-brush"></i></div>
+        <h3>UI/UX Design</h3>
+        <p>Figma‑crafted interfaces with full source files &amp; prototypes.</p>
+      </div>
+      <div class="service-card animate-on-scroll">
+        <div class="service-icon"><i class="fas fa-video"></i></div>
+        <h3>Video Editing</h3>
+        <p>Polished cuts, smooth transitions &amp; futuristic motion graphics.</p>
+      </div>
+      <div class="service-card animate-on-scroll">
+        <div class="service-icon"><i class="fas fa-object-ungroup"></i></div>
+        <h3>GFX Design</h3>
+        <p>Clean branding kits — logos, banners &amp; social assets included.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="about" class="about animate-on-scroll">
+    <div class="why-us-container">
+      <h2 class="section-heading">Why Us?</h2>
+      <p class="subheading">Discover the difference with SyncWave’s innovative approach.</p>
+      <div class="features-grid">
+        <div class="feature-card animate-on-scroll">
+          <i class="fas fa-rocket"></i>
+          <h3>Innovation</h3>
+          <p>Pushing boundaries with cutting-edge technology.</p>
+        </div>
+        <div class="feature-card animate-on-scroll">
+          <i class="fas fa-users"></i>
+          <h3>Expertise</h3>
+          <p>Industry specialists at your service.</p>
+        </div>
+        <div class="feature-card animate-on-scroll">
+          <i class="fas fa-shield-alt"></i>
+          <h3>Security</h3>
+          <p>Robust measures to protect your digital assets.</p>
+        </div>
+        <div class="feature-card animate-on-scroll">
+          <i class="fas fa-heart"></i>
+          <h3>Support</h3>
+          <p>Dedicated customer support around the clock.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Client Reviews -->
+  <section id="testimonials" class="testimonials animate-on-scroll">
+    <h2 class="section-heading">Client Reviews</h2>
+    <div class="reviews-sorting">
+      <label for="sortReviews">Sort by:</label>
+      <select id="sortReviews">
+        <option value="recent" selected>Most Recent</option>
+        <option value="rating">Highest Rating</option>
+      </select>
+    </div>
+    <div class="testimonial-grid" id="testimonialGrid">
+      <div class="testimonial-card animate-on-scroll" data-date="2025-03-15" data-rating="5">
+        <div class="testimonial-header">
+          <span class="review-date">2025-03-15</span>
+          <span class="review-stars">
+            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+            <i class="fas fa-star"></i><i class="fas fa-star"></i>
+          </span>
+        </div>
+        <div class="testimonial-info">
+          <span class="review-name">User</span>
+          <span class="review-profile">user</span>
+        </div>
+        <div class="review-description">
+          "terminated was here"
+        </div>
+      </div>
+      <div class="testimonial-card animate-on-scroll" data-date="2025-03-14" data-rating="4.5">
+        <div class="testimonial-header">
+          <span class="review-date">2025-03-14</span>
+          <span class="review-stars">
+            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+            <i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+          </span>
+        </div>
+        <div class="testimonial-info">
+          <span class="review-name">user</span>
+          <span class="review-profile">@userid</span>
+        </div>
+        <div class="review-description">
+          "blah blah blah"
+        </div>
+      </div>
+      <div class="testimonial-card animate-on-scroll" data-date="2025-03-13" data-rating="5">
+        <div class="testimonial-header">
+          <span class="review-date">2025-03-13</span>
+          <span class="review-stars">
+            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+            <i class="fas fa-star"></i><i class="fas fa-star"></i>
+          </span>
+        </div>
+        <div class="testimonial-info">
+          <span class="review-name">Name</span>
+          <span class="review-profile">@username</span>
+        </div>
+        <div class="review-description">
+          "blah blah blah"
+        </div>
+      </div>
+      <div class="testimonial-card animate-on-scroll" data-date="2025-03-12" data-rating="3.5">
+        <div class="testimonial-header">
+          <span class="review-date">2025-03-12</span>
+          <span class="review-stars">
+            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+            <i class="fas fa-star-half-alt"></i><i class="far fa-star"></i>
+          </span>
+        </div>
+        <div class="testimonial-info">
+          <span class="review-name">SyncWave User</span>
+          <span class="review-profile">@username</span>
+        </div>
+        <div class="review-description">
+          "blah blah blah"
+        </div>
+      </div>
+      <div class="testimonial-card animate-on-scroll" data-date="2025-04-07" data-rating="5">
+        <div class="testimonial-header">
+          <span class="review-date">2025-04-07</span>
+          <span class="review-stars">
+            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+            <i class="fas fa-star"></i><i class="fas fa-star"></i>
+          </span>
+        </div>
+        <div class="testimonial-info"> 
+          <span class="review-name">Termy Wermy</span>
+          <span class="review-profile">@username</span>
+        </div>
+        <div class="review-description">
+          "blah blah blah"
+        </div>
+      </div>
+      <div class="testimonial-card animate-on-scroll" data-date="2025-04-02" data-rating="5">
+        <div class="testimonial-header">
+          <span class="review-date">2025-04-02</span>
+          <span class="review-stars">
+            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+            <i class="fas fa-star"></i><i class="fas fa-star"></i>
+          </span>
+        </div>
+        <div class="testimonial-info">
+          <span class="review-name">Name</span>
+          <span class="review-profile">Username</span>
+        </div>
+        <div class="review-description">
+          "blah blah blah"
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact CTA -->
+  <section id="contact" class="cta-section animate-on-scroll">
+    <h2 class="section-heading">Ready to Elevate Your Game?</h2>
+    <p>Join our community and unlock your full potential with SyncWave.</p>
+    <a href="https://discord.gg/Z4EKfyv4sB" class="cta-btn">Join Our Discord</a>
+  </section>
+
+  <!-- Footer -->
+  <footer class="animate-on-scroll">
+    <p>&copy; 2025 SyncWave. All Rights Reserved.</p>
+    <p><a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+    <div class="social-icons">
+      <a href="https://discord.gg/Z4EKfyv4sB"><i class="fab fa-discord"></i></a>
+    </div>
+  </footer>
+
+  <script>
+    const menuToggle = document.querySelector('.menu-toggle');
+    const navMenu = document.getElementById('nav-menu');
+    menuToggle.addEventListener('click', () => {
+      const isOpen = navMenu.classList.toggle('open');
+      menuToggle.setAttribute('aria-expanded', isOpen);
+      menuToggle.innerHTML = isOpen ? '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+    });
+
+    // Back to top & scroll progress
+    const backToTopButton = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      backToTopButton.classList.toggle('show', window.pageYOffset > 300);
+      const progress = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+      document.getElementById("scroll-progress").style.width = progress + "%";
+    });
+    backToTopButton.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+    // Typed effect
+    const typedTexts = ["Cheat Development", "UI/UX Design", "Web Development", "Video Editing", "GFX Design"];
+    let typedIndex = 0, charIndex = 0;
+    const typedElement = document.getElementById("typed");
+    function type() {
+      if (charIndex < typedTexts[typedIndex].length) {
+        typedElement.textContent += typedTexts[typedIndex].charAt(charIndex++);
+        setTimeout(type, 150);
+      } else setTimeout(erase, 2000);
+    }
+    function erase() {
+      if (charIndex > 0) {
+        typedElement.textContent = typedTexts[typedIndex].substring(0, --charIndex);
+        setTimeout(erase, 100);
+      } else {
+        typedIndex = (typedIndex + 1) % typedTexts.length;
+        setTimeout(type, 500);
+      }
+    }
+
+    // Animate on scroll & sort testimonials
+    document.addEventListener("DOMContentLoaded", () => {
+      setTimeout(type, 500);
+      const observer = new IntersectionObserver((entries, obs) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            e.target.classList.add('in-view');
+            obs.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.1 });
+      document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
+
+      const sortEl = document.getElementById("sortReviews");
+      if (sortEl) {
+        sortEl.addEventListener("change", () => {
+          const grid = document.getElementById("testimonialGrid");
+          const reviews = Array.from(grid.children);
+          reviews.sort((a,b) => {
+            if (sortEl.value === "recent") {
+              return new Date(b.dataset.date) - new Date(a.dataset.date);
+            } else {
+              return parseFloat(b.dataset.rating) - parseFloat(a.dataset.rating);
+            }
+          });
+          reviews.forEach(r => grid.appendChild(r));
+        });
+        sortEl.dispatchEvent(new Event('change'));
+      }
+    });
+  </script>
+</body>
+</html>
